@@ -1,0 +1,9 @@
+
+opencv-python==4.8.0.76
+torch==2.1.0
+torchvision==0.16.0
+scikit-learn==1.2.2
+matplotlib==3.7.1
+torchsummary==1.5.1
+pip-tools==7.3.0
+ipykernel==6.27.0
