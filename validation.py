@@ -1,0 +1,32 @@
+VALIDATION_DATASET = {
+    "video.mp4": [
+        (1, 119, 'Splash screen', 'Idle'),
+        (120, 186, 'Home screen', 'Idle'),
+        (187, 350, 'Buy action', 'Touch screen'),
+        (351, 357, 'Buy screen', 'Idle'),
+        (358, 502, 'Buy screen', 'Scrolling'),
+        (503, 545, 'Buy screen', 'Idle'),
+        (546, 647, 'Product detail screen', 'Touch screen'),
+        (648, 692, 'Cart screen', 'Idle'),
+        (693, 768, 'Add to cart', 'Touch screen'),
+        (769, 791, 'Buy screen', 'Idle'),
+        (792, 888, 'View cart', 'Touch screen'),
+        (889, 901, 'Cart screen', 'Idle'),
+        (902, 1001, 'Pay', 'Touch screen'),
+        (1002, 1137, 'Cart details', 'Idle'),
+    ],
+    "video2.mp4": [
+        (1, 120, 'carga la app',''),
+        (121, 200, 'home',''),
+        (201, 294, 'clic en comprar loading',''),
+        (295, 545, 'lista de productos',''),
+        (546, 603, 'hace clic en una hamburguesa y loading',''),
+        (604, 692, 'detalle de producto',''),
+        (693, 767, 'agregar producto al carro loading',''),
+        (768, 792, 'lista de productos',''),
+        (793, 854, 'voy al carrito y loading',''),
+        (855, 901, 'carrito',''),
+        (902, 1009, 'pagar y loading',''),
+        (1010, 1137, 'detail of pay',''),
+    ]
+}
