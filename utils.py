@@ -2,6 +2,8 @@ from contextlib import contextmanager
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
+from collections import defaultdict
+
 
 @contextmanager
 def video_capture_manager(*args, **kwargs):
@@ -11,6 +13,7 @@ def video_capture_manager(*args, **kwargs):
     finally:
         stream.release()
 
+
 def load_video(path):
     has_next = True
     with video_capture_manager(path) as stream:
@@ -19,6 +22,15 @@ def load_video(path):
             if ret:
                 yield frame
             has_next = ret
+
+
+def get_frames_by_label(path, labeled_frames_list):
+    frames_by_label = defaultdict(list)
+    stream = list(load_video(path))
+    for index, frame in enumerate(stream):
+        label = labeled_frames_list[index]
+        frames_by_label[label].append(frame)
+    return frames_by_label
 
 
 def plot_label_counts(labels_dict):
@@ -42,20 +54,6 @@ def plot_label_counts(labels_dict):
     plt.title('Number of Appearances of Labels in Frames')
     plt.show()
 
-def show_separation_sample(images_by_label):
-  for label, frames in images_by_label.items():
-    frames_per_image = len(frames)
-    if(len(frames)>4):
-      frames_per_image = 4
-
-    plt.figure(figsize=(10, 5))
-
-    for idx, frame in enumerate(frames[:frames_per_image]):
-      plt.subplot(1, frames_per_image, idx+1)  # 1 fila, 2 columnas, posición 2
-      plt.axis('off')
-      cv2.putText(frame, f'Label: {label}', (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
-      plt.imshow(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-    plt.show()
 
 def show_separation_sample(images_by_label):
   for label, frames in images_by_label.items():
@@ -71,6 +69,23 @@ def show_separation_sample(images_by_label):
       cv2.putText(frame, f'Label: {label}', (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
       plt.imshow(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
     plt.show()
+
+
+def show_separation_sample(images_by_label):
+  for label, frames in images_by_label.items():
+    frames_per_image = len(frames)
+    if(len(frames)>4):
+      frames_per_image = 4
+
+    plt.figure(figsize=(10, 5))
+
+    for idx, frame in enumerate(frames[:frames_per_image]):
+      plt.subplot(1, frames_per_image, idx+1)  # 1 fila, 2 columnas, posición 2
+      plt.axis('off')
+      cv2.putText(frame, f'Label: {label}', (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+      plt.imshow(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+    plt.show()
+
 
 def show_image_ribbon(images_by_label):
   sorted_labels = sorted(images_by_label.keys())
