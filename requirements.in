@@ -7,3 +7,4 @@ matplotlib==3.7.1
 torchsummary==1.5.1
 pip-tools==7.3.0
 ipykernel==6.27.0
+gradio

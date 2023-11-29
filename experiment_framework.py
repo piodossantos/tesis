@@ -6,9 +6,9 @@ from metrics import show_metrics_massive
 from validation import VALIDATION_DATASET
 
 
-def experiment(device, name, model, preprocessing, path, grouper_function, evaluation_function, show=False):
+def infer(device, model, preprocessing, path, grouper_function):
     features = []
-    stream = load_video(path)
+    stream = list(load_video(path))
     for frame in stream:
         input_tensor = preprocessing(frame)
         input_batch = input_tensor.unsqueeze(0).to(device)
@@ -18,6 +18,11 @@ def experiment(device, name, model, preprocessing, path, grouper_function, evalu
 
     features = np.array(features)
     labels = grouper_function(features)
+    return labels, stream 
+
+
+def experiment(device, name, model, preprocessing, path, grouper_function, evaluation_function, show=False):
+    labels, _ = infer(device, model, preprocessing, path, grouper_function)
     tag = VALIDATION_DATASET[path]
     metrics = evaluation_function(labels, tag)
     if(show):
