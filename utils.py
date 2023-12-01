@@ -120,3 +120,9 @@ def get_longest_intervals(labels):
     intervals[current_interval[2]].append(current_interval)
     maximum_intervals = {k:max(v, key=lambda x: x[1] - x[0] + 1) for (k,v) in intervals.items()}
     return sorted(maximum_intervals.values(), key= lambda x: x[0])
+
+def load_dataset(path_list):
+  result = {}
+  for path in path_list:
+    result[path] = np.array(list(load_video(path)))
+  return result

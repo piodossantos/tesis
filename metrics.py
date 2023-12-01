@@ -3,6 +3,13 @@ from collections import namedtuple
 import numpy as np
 
 
+# Crear una namedtuple para los resultados
+MetricsResults = namedtuple('MetricsResults', ['mean', 'std'])
+
+
+ # Crear una namedtuple para agrupar los resultados
+OverallResults = namedtuple('OverallResults', ['precision', 'recall', 'f1', 'accuracy'])
+
 def get_metrics(y_true, y_pred):
     # Calcular la matriz de confusión
     conf_matrix = confusion_matrix(y_true, y_pred)
@@ -33,18 +40,14 @@ def eval_prediction(y_pred, tags,steps):
 
 
 def calculate_mean_var(precision_list, recall_list, f1_list, accuracy_list):
-    # Crear una namedtuple para los resultados
-    MetricsResults = namedtuple('MetricsResults', ['mean', 'std'])
-
+  
     # Calcular medias y varianzas para cada métrica usando numpy
     precision_results = MetricsResults(np.mean(precision_list), np.std(precision_list))
     recall_results = MetricsResults(np.mean(recall_list), np.std(recall_list))
     f1_results = MetricsResults(np.mean(f1_list), np.std(f1_list))
     accuracy_results = MetricsResults(np.mean(accuracy_list), np.std(accuracy_list))
 
-    # Crear una namedtuple para agrupar los resultados
-    OverallResults = namedtuple('OverallResults', ['precision', 'recall', 'f1', 'accuracy'])
-
+   
     return OverallResults(precision=precision_results, recall=recall_results, f1=f1_results, accuracy=accuracy_results)
 
 

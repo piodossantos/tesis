@@ -2,13 +2,14 @@ import torch
 import numpy as np
 from preprocessing.transforms import BASELINE
 from utils import load_video
-from metrics import show_metrics_massive
+from metrics import show_metrics_massive,calculate_mean_var
 from validation import VALIDATION_DATASET
+from collections import defaultdict
 
-
-def infer(device, model, preprocessing, path, grouper_function):
+def infer(device, model, preprocessing, grouper_function,stream):
+    
     features = []
-    stream = list(load_video(path))
+   
     for frame in stream:
         input_tensor = preprocessing(frame)
         input_batch = input_tensor.unsqueeze(0).to(device)
@@ -17,14 +18,26 @@ def infer(device, model, preprocessing, path, grouper_function):
         features.append(output.cpu().numpy().flatten())
 
     features = np.array(features)
+
+
+
     labels = grouper_function(features)
     return labels, stream 
 
 
-def experiment(device, name, model, preprocessing, path, grouper_function, evaluation_function, show=False):
-    labels, _ = infer(device, model, preprocessing, path, grouper_function)
-    tag = VALIDATION_DATASET[path]
-    metrics = evaluation_function(labels, tag)
+def experiment(device, name, model, preprocessing, dataset, grouper_function, evaluation_function, show=False):
+    metric_list = defaultdict(list)
+    for path,stream in dataset.items():
+      tag = VALIDATION_DATASET[path]
+      labels, _ = infer(device, model, preprocessing,  grouper_function,stream)
+      metrics = evaluation_function(labels, tag)
+      metric_list["precision"].append(metrics.precision.mean)
+      metric_list["recall"].append(metrics.recall.mean)
+      metric_list["accuracy"].append(metrics.accuracy.mean)
+      metric_list["f1"].append(metrics.f1.mean)
+      if(show):
+        show_metrics_massive(name+" "+path, metrics)
+    result  = calculate_mean_var( metric_list["precision"], metric_list["recall"],  metric_list["f1"], metric_list["accuracy"])
     if(show):
-       show_metrics_massive(name, metrics)
-    return metrics, labels
+      show_metrics_massive(name+" AVG", result)
+    return result
