@@ -22,14 +22,14 @@ def infer(device, model, preprocessing, grouper_function,stream):
 
 
     labels = grouper_function(features)
-    return labels, stream 
+    return labels 
 
 
 def experiment(device, name, model, preprocessing, dataset, grouper_function, evaluation_function, show=False):
     metric_list = defaultdict(list)
     for path,stream in dataset.items():
       tag = VALIDATION_DATASET[path]
-      labels, _ = infer(device, model, preprocessing,  grouper_function,stream)
+      labels = infer(device, model, preprocessing,  grouper_function,stream)
       metrics = evaluation_function(labels, tag)
       metric_list["precision"].append(metrics.precision.mean)
       metric_list["recall"].append(metrics.recall.mean)
