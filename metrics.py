@@ -34,6 +34,9 @@ def show_metrics(experiment, conf_matrix, precision, recall, f1, accuracy):
 
 def eval_prediction(y_pred, tags,steps):
   y_true = []
+  tagging_start = tags[0][0]
+  tagging_end = tags[-1][1]
+  y_pred = y_pred[tagging_start - 1:tagging_end]
   for start, end, screen, action in tags:
     y_true+=(end-start+1)*[screen]
   return get_metrics(y_true,y_pred)

@@ -124,5 +124,5 @@ def get_longest_intervals(labels):
 def load_dataset(path_list):
   result = {}
   for path in path_list:
-    result[path] = np.array(list(load_video(path)))
+    result[path] = np.array(list(load_video(f'data/{path}')))
   return result
