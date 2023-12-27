@@ -162,3 +162,6 @@ credentials.json
 
 data/*
 !data/.gitkeep
+
+mprofile*
+wandb/*

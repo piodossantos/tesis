@@ -15,6 +15,8 @@ anyio==3.7.1
     #   fastapi
     #   httpx
     #   starlette
+appdirs==1.4.4
+    # via wandb
 appnope==0.1.3
     # via
     #   ipykernel
@@ -34,6 +36,7 @@ certifi==2023.11.17
     #   httpcore
     #   httpx
     #   requests
+    #   sentry-sdk
 charset-normalizer==3.3.2
     # via requests
 click==8.1.7
@@ -41,6 +44,7 @@ click==8.1.7
     #   pip-tools
     #   typer
     #   uvicorn
+    #   wandb
 colorama==0.4.6
     # via typer
 comm==0.2.0
@@ -53,6 +57,8 @@ debugpy==1.8.0
     # via ipykernel
 decorator==5.1.1
     # via ipython
+docker-pycreds==0.4.0
+    # via wandb
 exceptiongroup==1.2.0
     # via
     #   anyio
@@ -74,6 +80,10 @@ fsspec==2023.10.0
     #   gradio-client
     #   huggingface-hub
     #   torch
+gitdb==4.0.11
+    # via gitpython
+gitpython==3.1.40
+    # via wandb
 google-api-core==2.15.0
     # via google-api-python-client
 google-api-python-client==2.86.0
@@ -157,6 +167,8 @@ matplotlib-inline==0.1.6
     #   ipython
 mdurl==0.1.2
     # via markdown-it-py
+memory-profiler==0.61.0
+    # via -r requirements.in
 mpmath==1.3.0
     # via sympy
 nest-asyncio==1.5.8
@@ -210,8 +222,12 @@ protobuf==4.25.1
     # via
     #   google-api-core
     #   googleapis-common-protos
+    #   wandb
 psutil==5.9.6
-    # via ipykernel
+    # via
+    #   ipykernel
+    #   memory-profiler
+    #   wandb
 ptyprocess==0.7.0
     # via pexpect
 pure-eval==0.2.2
@@ -245,6 +261,8 @@ python-dateutil==2.8.2
     #   jupyter-client
     #   matplotlib
     #   pandas
+python-dotenv==1.0.0
+    # via -r requirements.in
 python-multipart==0.0.6
     # via gradio
 pytz==2023.3.post1
@@ -253,6 +271,7 @@ pyyaml==6.0.1
     # via
     #   gradio
     #   huggingface-hub
+    #   wandb
 pyzmq==25.1.1
     # via
     #   ipykernel
@@ -268,6 +287,7 @@ requests==2.31.0
     #   gradio-client
     #   huggingface-hub
     #   torchvision
+    #   wandb
 rich==13.7.0
     # via typer
 rpds-py==0.13.1
@@ -282,12 +302,19 @@ scipy==1.11.4
     # via scikit-learn
 semantic-version==2.10.0
     # via gradio
+sentry-sdk==1.39.1
+    # via wandb
+setproctitle==1.3.3
+    # via wandb
 shellingham==1.5.4
     # via typer
 six==1.16.0
     # via
     #   asttokens
+    #   docker-pycreds
     #   python-dateutil
+smmap==5.0.1
+    # via gitdb
 sniffio==1.3.0
     # via
     #   anyio
@@ -352,9 +379,13 @@ tzdata==2023.3
 uritemplate==4.1.1
     # via google-api-python-client
 urllib3==2.1.0
-    # via requests
+    # via
+    #   requests
+    #   sentry-sdk
 uvicorn==0.24.0.post1
     # via gradio
+wandb==0.16.1
+    # via -r requirements.in
 wcwidth==0.2.12
     # via prompt-toolkit
 websockets==11.0.3

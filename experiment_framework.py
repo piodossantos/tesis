@@ -25,7 +25,7 @@ def infer(device, model, preprocessing, grouper_function,stream):
     return labels 
 
 
-def experiment(device, name, model, preprocessing, dataset, grouper_function, evaluation_function, show=False):
+def experiment(device, name, model, preprocessing, dataset, grouper_function, evaluation_function, show=False, **kwargs):
     metric_list = defaultdict(list)
     for path,stream in dataset.items():
       tag = VALIDATION_DATASET[path]

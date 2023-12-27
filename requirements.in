@@ -9,3 +9,6 @@ pip-tools==7.3.0
 ipykernel==6.27.0
 gradio
 google-api-python-client==2.86.0
+wandb==0.16.1
+memory_profiler
+python-dotenv==1.0.0
