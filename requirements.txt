@@ -97,9 +97,9 @@ google-auth-httplib2==0.2.0
     # via google-api-python-client
 googleapis-common-protos==1.62.0
     # via google-api-core
-gradio==4.7.1
+gradio==4.13.0
     # via -r requirements.in
-gradio-client==0.7.0
+gradio-client==0.8.0
     # via gradio
 h11==0.14.0
     # via
@@ -283,8 +283,6 @@ referencing==0.31.0
 requests==2.31.0
     # via
     #   google-api-core
-    #   gradio
-    #   gradio-client
     #   huggingface-hub
     #   torchvision
     #   wandb
