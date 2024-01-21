@@ -135,7 +135,9 @@ def convertir_pascal_a_yolo(archivo_pascal, directorio_salida, clases):
     image_classes = []
     with open(archivo_pascal, "r") as pascal_file:
         soup = BeautifulSoup(pascal_file, "xml")
-        
+        size = soup.find("size")
+        w=float(size.find("width").text)
+        h=float(size.find("height").text)
         lines_yolo = []
         for object_elem in soup.find_all("object"):
             class_name = object_elem.find("name").text
@@ -151,7 +153,7 @@ def convertir_pascal_a_yolo(archivo_pascal, directorio_salida, clases):
             image_classes.append(class_name)
             clase_id = clases.index(class_name)
             
-            line_yolo = f"{clase_id} {x_center} {y_center} {width} {height}\n"
+            line_yolo = f"{clase_id} {x_center / w} {y_center/h} {width/w} {height/h}\n"
             lines_yolo.append(line_yolo)
     
     nombre_salida = os.path.splitext(os.path.basename(archivo_pascal))[0] + ".txt"
