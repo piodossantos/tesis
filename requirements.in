@@ -12,3 +12,6 @@ google-api-python-client==2.86.0
 wandb==0.16.1
 memory_profiler
 python-dotenv==1.0.0
+ultralytics
+bs4
+lxml

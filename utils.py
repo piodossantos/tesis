@@ -3,7 +3,8 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from collections import defaultdict
-
+import os
+from bs4 import BeautifulSoup
 
 @contextmanager
 def video_capture_manager(*args, **kwargs):
@@ -128,3 +129,36 @@ def load_dataset(path_list):
       result[path] = load_video(f'data/{path}')
     return result
   return dataset_loader
+
+
+def convertir_pascal_a_yolo(archivo_pascal, directorio_salida, clases):
+    image_classes = []
+    with open(archivo_pascal, "r") as pascal_file:
+        soup = BeautifulSoup(pascal_file, "xml")
+        
+        lines_yolo = []
+        for object_elem in soup.find_all("object"):
+            class_name = object_elem.find("name").text
+            xmin = float(object_elem.find("xmin").text)
+            ymin = float(object_elem.find("ymin").text)
+            xmax = float(object_elem.find("xmax").text)
+            ymax = float(object_elem.find("ymax").text)
+            
+            x_center = (xmin + xmax) / 2.0
+            y_center = (ymin + ymax) / 2.0
+            width = (xmax - xmin) / 1.0
+            height = (ymax - ymin) / 1.0
+            image_classes.append(class_name)
+            clase_id = clases.index(class_name)
+            
+            line_yolo = f"{clase_id} {x_center} {y_center} {width} {height}\n"
+            lines_yolo.append(line_yolo)
+    
+    nombre_salida = os.path.splitext(os.path.basename(archivo_pascal))[0] + ".txt"
+    with open(os.path.join(directorio_salida, nombre_salida), "w") as yolo_file:
+        for line_yolo in lines_yolo:
+            print("linea", line_yolo)
+            if line_yolo:
+              yolo_file.write(line_yolo)
+    return image_classes
+
