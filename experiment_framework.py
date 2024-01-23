@@ -14,18 +14,11 @@ def infer(device, model, preprocessing, grouper_function,stream):
    
     for frame in stream:
         input_tensor = preprocessing(frame)
-        plt.imshow(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-        plt.show()
         input_batch = input_tensor.unsqueeze(0).to(device)
-        with torch.no_grad():
-            output = model.embed(input_batch)
-        print(output)
-        features.append(output.cpu().numpy().flatten())
+        output = model.get_embedding(input_batch).numpy().flatten()
+        features.append(output)
 
     features = np.array(features)
-
-
-
     labels = grouper_function(features)
     return labels 
 

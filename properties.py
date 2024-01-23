@@ -1,15 +1,15 @@
-from models.resnet18 import get_model as resnet18
-from models.yolov8 import get_model as yolov8
 from preprocessing.transforms import BASELINE, YOLO_BASELINE
 from sklearn.cluster import AgglomerativeClustering
 from clustering.similarity import SimilarityClustering
 from clustering.model import clustering_function
-
+from models.resnet18 import Resnet18
+from models.yolov8 import YOLOV8
 
 MODELS_ENUM = {
-    'RESNET18': resnet18,
-    'YOLOV8': yolov8
+    'RESNET18': Resnet18,
+    'YOLOV8': YOLOV8
 }
+
 PREPROCESSORS = {
     "BASELINE": BASELINE,
     "YOLO_BASELINE": YOLO_BASELINE
