@@ -1,6 +1,5 @@
 from gradio import Blocks, Row, File, JSON, Image, Column, Textbox, Slider, Button, Number, Warning, Error
 from experiment_framework import infer
-from models.resnet18 import get_model as get_resnet18
 from preprocessing.transforms import BASELINE
 from clustering.model import clustering_function
 from sklearn.cluster import AgglomerativeClustering
@@ -21,25 +20,6 @@ def show_sliders(file):
         rgb_video.append(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
     rgb_video = np.array(rgb_video)
     return rgb_video
-
-
-@lru_cache
-def get_clusters(file):
-    video = list(load_video(file))
-    labels = infer(**{
-        "model": get_resnet18(device),
-        "preprocessing": BASELINE,
-        "grouper_function": clustering_function(AgglomerativeClustering(None, distance_threshold=50)),
-        "device": device,
-        "stream": video
-    })
-    rgb_video = []
-    for frame in video:
-        rgb_video.append(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-
-    rgb_video = np.array(rgb_video)
-    intervals = get_longest_intervals(labels)
-    return rgb_video, intervals
 
 
 def generate_sliders_row(file, end):

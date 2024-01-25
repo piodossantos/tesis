@@ -1,15 +1,25 @@
 from torchvision import models
-from torchsummary import summary
 import torch
-from functools import cache
+from models.model import Model
 
 
-@cache
-def get_model(device):
-    model = models.resnet18(pretrained=True)
-    model = torch.nn.Sequential(*list(model.children())[:-1])
-    model = model.to(device)
-    #summary(model,(3,224,224))
-    model.eval()
+class Resnet18(Model):
+    model = None
 
-    return model
+    @staticmethod
+    def get_instance(*args):
+        if not Resnet18.model:
+            Resnet18.model = Resnet18(*args)
+        return Resnet18.model
+
+    def __init__(self, *args):
+        model = models.resnet18(pretrained=True)
+        model = torch.nn.Sequential(*list(model.children())[:-1])
+        model.to(*args)
+        #summary(model,(3,224,224))
+        model.eval()
+        self.model = model
+    
+    def get_embedding(self, image):
+        with torch.no_grad():
+            return self.model(image).cpu()

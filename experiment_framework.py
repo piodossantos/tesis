@@ -5,6 +5,8 @@ from utils import load_video
 from metrics import show_metrics_massive,calculate_mean_var
 from validation import VALIDATION_DATASET
 from collections import defaultdict
+import matplotlib.pyplot as plt
+import cv2
 
 def infer(device, model, preprocessing, grouper_function,stream):
     
@@ -13,14 +15,10 @@ def infer(device, model, preprocessing, grouper_function,stream):
     for frame in stream:
         input_tensor = preprocessing(frame)
         input_batch = input_tensor.unsqueeze(0).to(device)
-        with torch.no_grad():
-            output = model(input_batch)
-        features.append(output.cpu().numpy().flatten())
+        output = model.get_embedding(input_batch).numpy().flatten()
+        features.append(output)
 
     features = np.array(features)
-
-
-
     labels = grouper_function(features)
     return labels 
 
