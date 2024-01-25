@@ -1,5 +1,6 @@
 from ultralytics import YOLO
 from models.model import Model
+import torch
 
 
 class YOLOV8(Model):
@@ -16,4 +17,13 @@ class YOLOV8(Model):
         self.model = model
     
     def get_embedding(self, image):
-        return self.model.embed(image, verbose=False)[0].cpu()
+        def make_hook(key):
+            def hook(model, input, output):
+                intermediate_output[key] = output.detach()
+            return hook
+        intermediate_output = {}
+        self.model.model.model._modules['21'].register_forward_hook(make_hook('21'))
+        self.model.predict(image)
+        print(self.model.embed(image)[0].shape)
+        print(intermediate_output['21'].shape)
+        return torch.mean(intermediate_output['21'], (2,3)).squeeze()
