@@ -5,7 +5,6 @@ from models.model import Model
 
 class Resnet18(Model):
     model = None
-
     @staticmethod
     def get_instance(*args):
         if not Resnet18.model:
@@ -18,7 +17,8 @@ class Resnet18(Model):
         model.to(*args)
         #summary(model,(3,224,224))
         model.eval()
-        self.model = model
+        super().__init__(model,"resnet18",args)
+
     
     def get_embedding(self, image):
         with torch.no_grad():

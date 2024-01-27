@@ -7,18 +7,24 @@ from validation import VALIDATION_DATASET
 from collections import defaultdict
 import matplotlib.pyplot as plt
 import cv2
+import os
 
 def infer(device, model, preprocessing, grouper_function,stream):
     
     features = []
-   
-    for frame in stream:
+    filename = f"embeddings/{model.get_name()}.npy"
+    if os.path.exists(filename):
+      features=np.load(filename)
+    else:
+      print("model name: ",model.get_name())
+      for frame in stream:
         input_tensor = preprocessing(frame)
         input_batch = input_tensor.unsqueeze(0).to(device)
         output = model.get_embedding(input_batch).numpy().flatten()
         features.append(output)
 
-    features = np.array(features)
+      features = np.array(features)
+      np.save(filename,features)
     labels = grouper_function(features)
     return labels 
 
