@@ -1,0 +1,32 @@
+
+path: vin_yolo
+train: images/train/
+val: images/val/
+test: images/test/
+
+names:
+  0: ADVERTISEMENT
+  1: BACKGROUND IMAGE
+  2: BOTTOM NAVIGATION
+  3: BUTTON BAR
+  4: CARD
+  5: CHECKBOX
+  6: DATE PICKER
+  7: DRAWER
+  8: ICON
+  9: IMAGE
+  10: INPUT
+  11: LIST ITEM
+  12: MAP VIEW
+  13: MODAL
+  14: MULTI-TAB
+  15: NUMBER STEPPER
+  16: ON/OFF SWITCH
+  17: PAGER INDICATOR
+  18: RADIO BUTTON
+  19: SLIDER
+  20: TEXT
+  21: TEXT BUTTON
+  22: TOOLBAR
+  23: VIDEO
+  24: WEB VIEW

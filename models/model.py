@@ -15,7 +15,7 @@ class Model(ABC):
         self.args=args
         self.name=name
 
-    def get_name(self):
+    def get_name(self,filename):
         sha = hashlib.sha256()
-        sha.update(f'{self.name}{self.args}'.encode('utf-8'))
-        return sha.hexdigest()
+        sha.update(f'{self.args}'.encode('utf-8'))
+        return f'{self.name}-{filename}-{sha.hexdigest()}'
