@@ -1,30 +1,39 @@
 import numpy as np
+from torch.functional import F
+import torch
 
 class SimilarityClustering:
-    def __init__(self, threshold):
+    def __init__(self, threshold, distance='cosine'):
         self.threshold = threshold
         self.labels_ = None
+        self.distance = distance
 
     def fit(self, features):
-        cosine_similarities = np.array([cosine_similarity(features[i], features[i + 1])
-                                        for i in range(len(features) - 1)])
+        if self.distance == 'cosine':
+            distance = F.cosine_similarity
+        if self.distance == 'euclidean':
+            distance = F.pairwise_distance
 
-        cosine_similarities = np.insert(cosine_similarities, 0, cosine_similarity(features[0], features[0]))
+        cosine_similarities = [distance(torch.Tensor([features[i]]), torch.Tensor([features[i + 1]]))
+                                        for i in range(len(features) - 1)]
+        cosine_similarities = list(map(float, cosine_similarities))
+        cosine_similarities = [1.0] if self.distance == 'cosine' else  [0.0] + cosine_similarities
+        self.labels_ = label_clusters(cosine_similarities, self.threshold, self.distance)
 
-        self.labels_ = label_clusters(cosine_similarities, self.threshold)
 
-cosine_similarity = lambda vec1, vec2: np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
-
-def label_clusters(cosine_similarities, threshold):
+def label_clusters(cosine_similarities, threshold, distance):
     clusters = np.zeros(len(cosine_similarities), dtype=int)
     current_cluster = 0
-    for i in range(1, len(cosine_similarities)):
+    for i in range(0, len(cosine_similarities)):
         #print(i,cosine_similarities[i])
-
-        if cosine_similarities[i] < threshold:
-            current_cluster += 1
+        if distance == 'euclidean':
+            if cosine_similarities[i] > threshold:
+                current_cluster += 1
+        if distance == 'cosine':
+            if cosine_similarities[i] < threshold:
+                current_cluster += 1
+        
         clusters[i] = current_cluster
-    #print(clusters)
     return clusters
 
 def clustering_function(model):

@@ -13,3 +13,9 @@ YOLO_BASELINE = transforms.Compose([
     transforms.Resize([640, 640]),
     transforms.ToTensor(),
 ])
+
+ENCODER_BASELINE = transforms.Compose([
+    transforms.ToPILImage(),
+    transforms.Resize(120),
+    transforms.ToTensor(),
+])
