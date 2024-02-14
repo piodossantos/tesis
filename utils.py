@@ -6,6 +6,9 @@ from collections import defaultdict
 import os
 from bs4 import BeautifulSoup
 import json
+from PIL import Image, ImageDraw
+import numpy as np
+import torch
 
 @contextmanager
 def video_capture_manager(*args, **kwargs):
@@ -164,6 +167,11 @@ def convertir_pascal_a_yolo(archivo_pascal, directorio_salida, clases):
               yolo_file.write(line_yolo)
     return image_classes
 
+CLASSES = ['TextButton', 'Text', 'Image', 'PageIndicator', 'Icon',
+          'UpperTaskBar', 'EditText', 'Bottom_Navigation', 'Drawer', 'Toolbar',
+          'Card', 'Multi_Tab', 'Spinner', 'CheckedTextView', 'Switch', 'Modal',
+          'BackgroundImage', 'Map', 'Remember', 'CheckBox']
+
 def recurse(element,image_classes,clases,lines_yolo,w,h):
     if isinstance(element, dict):
         if "componentLabel" in element:
@@ -224,4 +232,37 @@ def convertir_json_a_yolo(archivo_json, directorio_salida, clases):
             if line_yolo:
               yolo_file.write(line_yolo)
     return image_classes
+
+def draw_mask(class_tensor, boxes_tensor):
+  classes = class_tensor.tolist()
+  boxes = boxes_tensor.tolist()
+  class_names = map(lambda i: CLASSES[int(i)], classes)
+  results = zip(boxes, class_names)
+  images = []
+  elems = []
+  image = Image.new('RGB', (256, 256), (255,255,255))
+  draw = ImageDraw.Draw(image)
+  for box, class_name in results:
+      x0, x1, y0, y1 = box
+      if class_name == "Text":
+        elems.append((x0, x1, y0, y1, (255, 0, 0)))
+      if class_name == "TextButton" or class_name == "Icon" or class_name == "Switch" or class_name == "CheckBox":
+        elems.append((x0, x1, y0, y1, (0, 255, 0)))
+      if class_name == "Image" or class_name == "BackgroundImage":
+        images.append((x0, x1, y0, y1, (0, 0, 255)))
+      if class_name == "EditText":
+        elems.append((x0, x1, y0, y1, (0, 0, 0)))
+  for (x0, x1, y0, y1, color) in images:
+    draw.rectangle(
+        ((x0, x1),
+        (y0, y1)
+    ), color)
+  for (x0, x1, y0, y1, color) in elems:
+      draw.rectangle(
+          ((x0, x1),
+          (y0, y1)
+      ), color)
+  tensor = torch.Tensor(np.array(image))
+  tensor = tensor.permute(2, 0, 1).unsqueeze(0) / 255
+  return tensor
 

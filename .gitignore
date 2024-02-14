@@ -165,3 +165,8 @@ data/*
 
 mprofile*
 wandb/*
+
+embeddings
+!embeddings/.gitkeep
+
+.DS_Store
