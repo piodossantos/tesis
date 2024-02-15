@@ -19,3 +19,8 @@ class Model(ABC):
         sha = hashlib.sha256()
         sha.update(f'{self.args}{hyperparams}'.encode('utf-8'))
         return f'{self.name}-{filename}-{sha.hexdigest()}'
+    
+    def get_short_name(self,hyperparams):
+        sha = hashlib.sha256()
+        sha.update(f'{self.args}{hyperparams}'.encode('utf-8'))
+        return f'{self.name}-{sha.hexdigest()}'

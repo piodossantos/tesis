@@ -41,7 +41,7 @@ def experiment(device, name, model, preprocessing, dataset, grouper_function, ev
       metric_list["f1"].append(metrics.f1.mean)
     #   if(show):
     #     show_metrics_massive(name+" "+path, metrics)
-    filename = f"embeddings/{model.get_name(path,hyperparams)}.tsv"
+    filename = f"embeddings/{model.get_short_name(hyperparams)}.tsv"
     if not os.path.exists(filename):
       tsv = []
       for embedding in all_video_embedings:
