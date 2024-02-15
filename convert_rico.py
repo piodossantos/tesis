@@ -6,9 +6,11 @@ import shutil
 from collections import Counter
 from ultralytics.data.utils import compress_one_image
 from PIL import Image
+import datetime
+import cv2
 OUTPUT = 'rico'
 
-VERSION ="1"
+VERSION ="5"
 
 FOLDER_NAME=f'{OUTPUT}_{VERSION}'
 random.seed(41)
@@ -52,13 +54,20 @@ CLASES = [
     'WEB VIEW'
 ]
 acc = []
+start = datetime.datetime.now()
 for index, file in enumerate(file_list):
-    if index % 25 == 0:
-        print(f"{index/len(file_list)*100} % avance")
+    if index>0 and index % 70 == 0:
+        avance= index/len(file_list)
+        diferencia = datetime.datetime.now() - start
+        tiempo_restante = ((1-avance) /avance ) * diferencia.total_seconds()
+        tiempo_restante = datetime.timedelta(seconds=tiempo_restante)
+        minutos = (tiempo_restante.seconds % 3600) // 60
+        segundos = tiempo_restante.seconds % 60
+        print(f"{avance*100} % avance, tiempo restante:{minutos}mm{segundos}ss")
     if '.json' in file:
         sanitize_filename= file.replace('semantic_annotations/','').replace(".json",".txt")
         #print(sanitize_filename)
-        if os.path.exists(f'rico_1/labels/test/{sanitize_filename}') or os.path.exists(f'rico_1/labels/train/{sanitize_filename}')  or os.path.exists(f'rico_1/labels/val/{sanitize_filename}') :
+        if os.path.exists(f'{FOLDER_NAME}/labels/test/{sanitize_filename}') or os.path.exists(f'{FOLDER_NAME}/labels/train/{sanitize_filename}')  or os.path.exists(f'{FOLDER_NAME}/labels/val/{sanitize_filename}') :
             pass
         else:
             # print(file)
@@ -73,15 +82,25 @@ for index, file in enumerate(file_list):
             image_directory= directory.replace('labels', 'images')
             image_file = file.replace('Annotations', 'JPEGImages').replace('.json', '.jpg').replace("semantic_annotations","combined")
         # print(image_file,image_directory)
-            # compress_one_image(image_file)
+            #compress_one_image(image_file)
             
-            #shutil.copy(image_file, image_directory)
-            img = Image.open(image_file)
-            img=img.resize((640,640))
+            shutil.copy(image_file, image_directory)
+            #img = Image.open(image_file)
+            #img=img.resize((256,256))
             file_aux=f'{image_directory}/{image_file}'.replace('combined/','')
-            img.save(file_aux)
-            compress_one_image(file_aux)
+            #img.save(file_aux,'JPEG')
+            # #compress_one_image(file_aux)
 
+            #img = cv2.imread(image_file)
+
+        # Check if the image was loaded successfully
+            # Resize the image to 256x256 pixels
+            #img_resized = cv2.resize(img, (10, 10))
+
+            # Specify the output file path (e.g., as a PNG image)
+
+            # Save the resized image
+            #cv2.imwrite(file_aux, img_resized,[cv2.IMWRITE_JPEG_QUALITY, 50])
 print(acc)
 dicc = Counter(acc)
 

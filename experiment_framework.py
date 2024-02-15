@@ -8,14 +8,13 @@ import matplotlib.pyplot as plt
 import os
 
 
-def infer(device, model, preprocessing, grouper_function,stream,path):
-    
+def infer(device, model, preprocessing, grouper_function,stream,path, hyperparams):
     features = []
-    filename = f"embeddings/{model.get_name(path)}.npy"
+    filename = f"embeddings/{model.get_name(path,hyperparams)}.npy"
     if os.path.exists(filename):
       features=np.load(filename)
     else:
-      print("model name: ",model.get_name(path))
+      print("Generating embedding for name: ",model.get_name(path,hyperparams))
       for frame in stream:
         input_tensor = preprocessing(frame)
         input_batch = input_tensor.unsqueeze(0).to(device)
@@ -28,21 +27,21 @@ def infer(device, model, preprocessing, grouper_function,stream,path):
     return labels, features
 
 
-def experiment(device, name, model, preprocessing, dataset, grouper_function, evaluation_function, show=False, **kwargs):
+def experiment(device, name, model, preprocessing, dataset, grouper_function, evaluation_function, hyperparams, show=False,**kwargs):
     metric_list = defaultdict(list)
     all_video_embedings = []
     for path,stream in dataset.items():
       tag = VALIDATION_DATASET[path]
-      labels, embeddings = infer(device, model, preprocessing,  grouper_function,stream,path)
+      labels, embeddings = infer(device, model, preprocessing,  grouper_function,stream,path,hyperparams)
       all_video_embedings += list(embeddings)
       metrics = evaluation_function(labels, tag)
       metric_list["precision"].append(metrics.precision.mean)
       metric_list["recall"].append(metrics.recall.mean)
       metric_list["accuracy"].append(metrics.accuracy.mean)
       metric_list["f1"].append(metrics.f1.mean)
-      if(show):
-        show_metrics_massive(name+" "+path, metrics)
-    filename = f"embeddings/{model.name}.tsv"
+    #   if(show):
+    #     show_metrics_massive(name+" "+path, metrics)
+    filename = f"embeddings/{model.get_name(path,hyperparams)}.tsv"
     if not os.path.exists(filename):
       tsv = []
       for embedding in all_video_embedings:
