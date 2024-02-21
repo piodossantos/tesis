@@ -266,3 +266,19 @@ def draw_mask(class_tensor, boxes_tensor):
   tensor = tensor.permute(2, 0, 1).unsqueeze(0) / 255
   return tensor
 
+
+def get_label_tsv(dataset):
+    data = ["frame\tvideo\tinterval\n"]
+    for video, intervals in dataset.items():
+      video_frames = load_video(f'data/{video}')
+      for index, _ in enumerate(video_frames):
+        tag_index = index + 1
+        interval = list(filter(lambda x:  x[0] <= tag_index <= x[1], intervals))
+        if len(interval):
+          class_name = interval[0][2]
+        else:
+          class_name = "NONE"
+        data.append("\t".join([str(tag_index), video, class_name]) + '\n')
+    with open(f'embedding_tags.tsv', 'w') as f:
+      f.writelines(data)
+    return data
