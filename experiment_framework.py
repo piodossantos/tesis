@@ -27,11 +27,11 @@ def infer(device, model, preprocessing, grouper_function,stream,path, hyperparam
     return labels, features
 
 
-def experiment(device, name, model, preprocessing, dataset, grouper_function, evaluation_function, hyperparams, show=False,**kwargs):
+def experiment(device, name, model, preprocessing, dataset, grouper_function, evaluation_function, hyperparams, show=False, validation_dataset=VALIDATION_DATASET, **kwargs):
     metric_list = defaultdict(list)
     all_video_embedings = []
     for path,stream in dataset.items():
-      tag = VALIDATION_DATASET[path]
+      tag = validation_dataset[path]
       labels, embeddings = infer(device, model, preprocessing,  grouper_function,stream,path,hyperparams)
       all_video_embedings += list(embeddings)
       metrics = evaluation_function(labels, tag)
