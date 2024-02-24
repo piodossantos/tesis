@@ -12,12 +12,12 @@ class VGG19(Model):
         return VGG19.model
 
     def __init__(self, *args):
-        model = models.mobilenet_v2(pretrained=True)
+        model = models.vgg(pretrained=True)
         model = torch.nn.Sequential(*list(model.children())[:-1])
         model.to(*args)
         #summary(model,(3,224,224))
         model.eval()
-        super().__init__(model,"VGG19",args)
+        super().__init__(model,"vgg19",args)
 
     
     def get_embedding(self, image):
