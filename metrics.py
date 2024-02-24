@@ -12,6 +12,7 @@ OverallResults = namedtuple('OverallResults', ['precision', 'recall', 'f1', 'acc
 
 def get_metrics(y_true, y_pred):
     # Calcular la matriz de confusión
+
     conf_matrix = confusion_matrix(y_true, y_pred)
 
     # Calcular precisión, recall, F1-score y exactitud

@@ -17,9 +17,10 @@ class SimilarityClustering:
         cosine_similarities = [distance(torch.Tensor([features[i]]), torch.Tensor([features[i + 1]]))
                                         for i in range(len(features) - 1)]
         cosine_similarities = list(map(float, cosine_similarities))
-        cosine_similarities = [1.0] if self.distance == 'cosine' else  [0.0] + cosine_similarities
-        self.labels_ = label_clusters(cosine_similarities, self.threshold, self.distance)
 
+        cosine_similarities = ([1.0] if self.distance == 'cosine' else  [0.0]) + cosine_similarities
+
+        self.labels_ = label_clusters(cosine_similarities, self.threshold, self.distance)
 
 def label_clusters(cosine_similarities, threshold, distance):
     clusters = np.zeros(len(cosine_similarities), dtype=int)

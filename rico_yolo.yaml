@@ -1,6 +1,6 @@
 
-path: vin_yolo
-train: images/train/
+path: /Users/pio/postgrado/tesis/tesis/rico_5
+train: images/test/
 val: images/val/
 test: images/test/
 
