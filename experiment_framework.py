@@ -6,21 +6,28 @@ from validation import VALIDATION_DATASET
 from collections import defaultdict
 import matplotlib.pyplot as plt
 import os
+import torch
 
-
-def infer(device, model, preprocessing, grouper_function,stream,path, hyperparams):
+def infer(device, model, preprocessing, grouper_function,stream,path, hyperparams,batch_size=16):
     features = []
     filename = f"embeddings/{model.get_name(path,hyperparams)}.npy"
     if os.path.exists(filename):
       features=np.load(filename)
     else:
       print("Generating embedding for name: ",model.get_name(path,hyperparams))
+      image_list = []
       for frame in stream:
         input_tensor = preprocessing(frame)
         input_batch = input_tensor.unsqueeze(0).to(device)
-        output = model.get_embedding(input_batch).numpy().flatten()
-        features.append(output)
-
+        image_list.append(input_batch)
+        if len(image_list==batch_size):
+          output = model.get_embedding(torch.cat(image_list,0)).numpy().flatten(1)
+          image_list=[]
+          features+=output.unbind(dim=0)
+      if len(image_list):
+         output = model.get_embedding(torch.cat(image_list,0)).numpy().flatten(1)
+         image_list=[]
+         features.append(output)
       features = np.array(features)
       np.save(filename,features)
     labels = grouper_function(features)

@@ -11,16 +11,22 @@ from models.yolores import YoloRes
 from models.mobileNetV2 import MobileNetV2
 from models.VGG19 import VGG19
 from models.resnet152 import Resnet152
+from models.siameseMobileNet import SiameseMobileNet
+from models.siameseYolo import SiameseYoloNet
+from models.PretrainedImageDescriptor import PretrainedImageDescriptor
 
 MODELS_ENUM = {
     'RESNET18': Resnet18,
     'YOLOV8': YOLOV8,
     'SIAMESE_RESNET18': SiameseResnet18,
+    'SIAMESE_YOLO':SiameseYoloNet,
+    'SIAMESE_MOBILENET':SiameseMobileNet,
     'Encoder': Encoder,
     'YOLORES': YoloRes,
     'MOBILENETV2': MobileNetV2,
     'VGG19': VGG19,
     'RESNET152': Resnet152,
+    'PRETRAINED_IMAGE_DESCRIPTOR': PretrainedImageDescriptor,
 }
 
 PREPROCESSORS = {
