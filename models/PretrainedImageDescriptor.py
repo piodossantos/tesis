@@ -1,7 +1,6 @@
 from torchvision import models
 import torch
 from models.model import Model
-from transformers import Pix2StructProcessor
 from torch import nn
 from PIL import Image
 import numpy as np

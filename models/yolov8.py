@@ -13,7 +13,6 @@ class YOLOV8(Model):
 
     def __init__(self, *args):
         model = YOLO(*args)
-        print("dddssdfsdf")
         super().__init__(model,"yoloV8",args)
     
     def get_embedding(self, image):
